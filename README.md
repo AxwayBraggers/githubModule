@@ -18,12 +18,12 @@ The Braggers Github module, tends to provide a method of contacting the github A
 Github Module can gather information about a user from github API. The username is obtained trough a command issued in Slack. A Slack bot intercepts the command and invokes the module.
 On completion, gathered information is sent to the main App, which persists the information to ArrowDB.
  
-![User data Aggregation](https://github.com/AxwayBraggers/githubModule/Resources/User%20data%20aggregation.png)
+![User data Aggregation](https://github.com/AxwayBraggers/githubModule/blob/master/Resources/User%20data%20aggregation.png?raw=true)
 
 This module is also capable of handling user authentication, and can act as an Identity Provider (iDP).
 The module performs a basic form of authentication - user passes in their "**username**" either Slack or Github, and the module checks ArrowDB if the user exists.
 
-![Login and Authentication](https://github.com/AxwayBraggers/githubModule/Resources/Login%20and%20Authentication%20Procedure.png)
+![Login and Authentication](https://github.com/AxwayBraggers/githubModule/blob/master/Resources/Login%20and%20Authentication%20Procedure.png?raw=true)
 
 > NOTE:
 > User **doesn't** exist - the export command should be issued in slack
