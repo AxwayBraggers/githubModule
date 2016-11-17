@@ -3,7 +3,7 @@ var webClient = require('slack-terminalize').getWebClient();
 var getUser = function(username, callBack) {
     webClient.users.info(username, function(err, response) {
         if (err || !response.ok) {
-            postMessage(paramss.channel, username + " not taken");
+            postMessage(paramss.channel, username + ' not taken');
         }
 
         callBack(response.user);
