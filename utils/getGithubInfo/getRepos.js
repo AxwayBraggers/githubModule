@@ -8,7 +8,7 @@ function getRepos(user) {
     let options = {
         url: `https://api.github.com/users/${user}/repos`,
         headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'
         }
     }
 
@@ -23,12 +23,17 @@ function getRepos(user) {
                 stars: element.stargazers_count,
                 language: element.language
             });
+            //console.log(userInfo);
+            //return userInfo;
         }, this);
-
+        // console.log(userInfo);
+        return userInfo;
     });
+
+    // return userInfo;
 }
 
-getRepos("tpopov94");
+//getRepos('tpopov94');
 
 module.exports = {
     getRepos: getRepos

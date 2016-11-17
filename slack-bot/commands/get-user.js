@@ -1,6 +1,7 @@
 /*globals require, module */
 
 var slackUtils = require('../utils/slack');
+var githubInfo = require('../../utils/getGithubInfo/getRepos');
 
 module.exports = function(params) {
     var currentUser = params.args[0];
@@ -8,8 +9,6 @@ module.exports = function(params) {
 
     var len = currentUser.length;
     var parsedUser = '';
-
-    console.log(githubUserName);
 
     // If received username is not in the format <@...> the params is not valid slack user
     if (!/^<@(.+)>$/.test(currentUser)) {
@@ -26,15 +25,18 @@ module.exports = function(params) {
     slackUtils.getUserInfo(parsedUser, function(user) {
             var slackUserInfo = {};
             slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
+
+            var gitInfo = githubInfo.getRepos(githubUserName);
+
             slackUserInfo = {
                 firstName: user.profile.first_name,
                 lastName: user.profile.last_name,
                 email: user.profile.email,
-                githubUser: githubUserName
+                githubUser: githubUserName,
+                gitInfo: gitInfo
             };
 
             console.log(slackUserInfo);
-            return slackUserInfo;
         },
         function(err) {
             slackUtils.postMessage(params.channel, 'Something went wrong');
