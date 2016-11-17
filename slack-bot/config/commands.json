@@ -1,0 +1,11 @@
+{
+    "get-user": {
+        "alias": ["export"],
+        "endpoint": "#",
+        "help": "help [command](optional)",
+        "description": "Get slack user information"
+    },
+    "error": {
+        "exclude": true
+    }
+}
