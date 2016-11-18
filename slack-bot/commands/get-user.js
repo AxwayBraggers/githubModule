@@ -2,6 +2,7 @@
 
 var slackUtils = require('../utils/slack');
 var githubInfo = require('../../utils/getGithubInfo/getRepos');
+var userUtils = require('../utils/collectInfoUtils');
 
 module.exports = function(params) {
     var currentUser = params.args[0];
@@ -9,7 +10,6 @@ module.exports = function(params) {
 
     var len = currentUser.length;
     var parsedUser = '';
-    var gitInfo = [];
     var slackUserInfo = {};
 
     // If received username is not in the format <@...> the params is not valid slack user
@@ -25,25 +25,30 @@ module.exports = function(params) {
     }
 
     slackUtils.getUserInfo(parsedUser, function(user) {
-            slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
+        slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
 
+        // if github username is passed to slack bot
+        if (githubUserName) {
             slackUserInfo = {
                 firstName: user.profile.first_name,
                 lastName: user.profile.last_name,
                 email: user.profile.email,
-                githubUser: githubUserName,
-                repos: ""
+                githubUser: githubUserName
+            };
+            githubInfo.getRepos(githubUserName.trim(), function(info) {
+                slackUserInfo.repos = info;
+
+                userUtils.userInfo(slackUserInfo);
+            });
+
+        } else {
+            slackUserInfo = {
+                firstName: user.profile.first_name,
+                lastName: user.profile.last_name,
+                email: user.profile.email
             };
 
-            if (githubUserName) {
-                githubInfo.getRepos(githubUserName.trim(), function(info) {
-                    slackUserInfo.repos = info;
-                    console.log(slackUserInfo);
-                });
-            }
-        },
-        function(err) {
-            slackUtils.postMessage(params.channel, 'Something went wrong');
-            return console.dir(err);
-        });
+            userUtils.userInfo(slackUserInfo);
+        }
+    });
 };
