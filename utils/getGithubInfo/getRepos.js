@@ -26,14 +26,12 @@ function getRepos(user) {
             //console.log(userInfo);
             //return userInfo;
         }, this);
-        // console.log(userInfo);
-        return userInfo;
+        console.log(userInfo); // When I log it everything is ok
+        return userInfo; // but when I try to return the object in the slack bot I receive undefined
     });
 
     // return userInfo;
 }
-
-//getRepos('tpopov94');
 
 module.exports = {
     getRepos: getRepos

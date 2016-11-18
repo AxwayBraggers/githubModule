@@ -5,7 +5,7 @@ var githubInfo = require('../../utils/getGithubInfo/getRepos');
 
 module.exports = function(params) {
     var currentUser = params.args[0];
-    var githubUserName = params.args[1].trim() || ''; // github username is not mandatory
+    var githubUserName = params.args[1] || ''; // github username is not mandatory
 
     var len = currentUser.length;
     var parsedUser = '';
@@ -26,7 +26,10 @@ module.exports = function(params) {
             var slackUserInfo = {};
             slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
 
-            var gitInfo = githubInfo.getRepos(githubUserName);
+            if (githubUserName) {
+                console.log(3);
+                var gitInfo = githubInfo.getRepos(githubUserName.trim());
+            }
 
             slackUserInfo = {
                 firstName: user.profile.first_name,
