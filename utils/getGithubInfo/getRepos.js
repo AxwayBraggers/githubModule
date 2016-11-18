@@ -2,7 +2,7 @@
 
 const request = require('request');
 
-function getRepos(user) {
+function getRepos(user, cb) {
     var userInfo = [];
 
     let options = {
@@ -23,14 +23,9 @@ function getRepos(user) {
                 stars: element.stargazers_count,
                 language: element.language
             });
-            //console.log(userInfo);
-            //return userInfo;
         }, this);
-        console.log(userInfo); // When I log it everything is ok
-        return userInfo; // but when I try to return the object in the slack bot I receive undefined
+        cb(userInfo);
     });
-
-    // return userInfo;
 }
 
 module.exports = {

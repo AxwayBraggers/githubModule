@@ -9,6 +9,8 @@ module.exports = function(params) {
 
     var len = currentUser.length;
     var parsedUser = '';
+    var gitInfo = [];
+    var slackUserInfo = {};
 
     // If received username is not in the format <@...> the params is not valid slack user
     if (!/^<@(.+)>$/.test(currentUser)) {
@@ -23,23 +25,22 @@ module.exports = function(params) {
     }
 
     slackUtils.getUserInfo(parsedUser, function(user) {
-            var slackUserInfo = {};
             slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
-
-            if (githubUserName) {
-                console.log(3);
-                var gitInfo = githubInfo.getRepos(githubUserName.trim());
-            }
 
             slackUserInfo = {
                 firstName: user.profile.first_name,
                 lastName: user.profile.last_name,
                 email: user.profile.email,
                 githubUser: githubUserName,
-                gitInfo: gitInfo
+                repos: ""
             };
 
-            console.log(slackUserInfo);
+            if (githubUserName) {
+                githubInfo.getRepos(githubUserName.trim(), function(info) {
+                    slackUserInfo.repos = info;
+                    console.log(slackUserInfo);
+                });
+            }
         },
         function(err) {
             slackUtils.postMessage(params.channel, 'Something went wrong');
