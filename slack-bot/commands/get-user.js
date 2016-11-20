@@ -1,7 +1,8 @@
 /*globals require, module */
 
 var slackUtils = require('../utils/slack');
-var githubInfo = require('../../utils/getGithubInfo/getRepos');
+var githubRepoInfo = require('../../utils/getGithubInfo/getRepos');
+var githubInfo = require('../../utils/getGithubInfo/getUserInfo');
 var userUtils = require('../utils/collectInfoUtils');
 
 module.exports = function(params) {
@@ -17,7 +18,6 @@ module.exports = function(params) {
         slackUtils.postMessage(params.channel, 'Wrong username');
     }
 
-    // Could not do it with regex properly
     for (var i = 0; i < len; i += 1) {
         if (currentUser[i] !== '<' && currentUser[i] !== '@' && currentUser[i] !== '>') {
             parsedUser += currentUser[i];
@@ -25,7 +25,7 @@ module.exports = function(params) {
     }
 
     slackUtils.getUserInfo(parsedUser, function(user) {
-        slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted');
+        slackUtils.postMessage(params.channel, 'User: ' + user.real_name + ' with email: ' + user.profile.email + ' information extracted !');
 
         // if github username is passed to slack bot
         if (githubUserName) {
@@ -35,17 +35,22 @@ module.exports = function(params) {
                 email: user.profile.email,
                 githubUser: githubUserName
             };
-            githubInfo.getRepos(githubUserName.trim(), function(info) {
-                slackUserInfo.repos = info;
 
-                userUtils.userInfo(slackUserInfo);
+            githubRepoInfo.getRepos(githubUserName.trim(), function(info) {
+                slackUserInfo.repos = info;
+                githubInfo.getGitInfo(githubUserName.trim(), function(info) {
+                    slackUserInfo.gitInfo = info;
+
+                    userUtils.userInfo(slackUserInfo); // Send collected info to another module
+                });
             });
 
         } else {
             slackUserInfo = {
                 firstName: user.profile.first_name,
                 lastName: user.profile.last_name,
-                email: user.profile.email
+                email: user.profile.email,
+                githubUser: githubUserName
             };
 
             userUtils.userInfo(slackUserInfo);
