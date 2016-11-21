@@ -2,13 +2,13 @@
 
 const request = require('request');
 
-function getRepos(user) {
+function getRepos(user, cb) {
     var userInfo = [];
 
     let options = {
         url: `https://api.github.com/users/${user}/repos`,
         headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'
         }
     }
 
@@ -24,11 +24,9 @@ function getRepos(user) {
                 language: element.language
             });
         }, this);
-
+        cb(userInfo);
     });
 }
-
-getRepos("tpopov94");
 
 module.exports = {
     getRepos: getRepos
