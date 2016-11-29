@@ -14,6 +14,12 @@ function getRepos(user, cb) {
 
     request(options, function(resp, err, body) {
         var githubInfo = JSON.parse(body);
+
+        // If username is wrong or now found returns error log
+        if (githubInfo.message === "Not Found") {
+            return console.log('Wrong username');
+        }
+
         githubInfo.forEach(function(element) {
             userInfo.push({
                 name: element.name,

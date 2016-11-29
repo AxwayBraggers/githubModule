@@ -13,6 +13,7 @@ function getInfo(user, cb) {
     }
 
     request(options, function(resp, err, body) {
+
         var githubInfo = JSON.parse(body);
         userInfo = {
             location: githubInfo.location,
