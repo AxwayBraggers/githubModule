@@ -4,6 +4,7 @@ var slackUtils = require('../utils/slack');
 var githubRepoInfo = require('../../utils/getGithubInfo/getRepos');
 var githubInfo = require('../../utils/getGithubInfo/getUserInfo');
 var userUtils = require('../utils/collectInfoUtils');
+var requestUtils = require('../utils/requestUtils');
 
 module.exports = function(params) {
     var currentUser = params.args[0];
@@ -41,7 +42,12 @@ module.exports = function(params) {
                 githubInfo.getGitInfo(githubUserName.trim(), function(info) {
                     slackUserInfo.gitInfo = info;
 
-                    userUtils.userInfo(slackUserInfo); // Send collected info to another module
+                    //userUtils.userInfo(slackUserInfo); // Send collected info to another module
+                   
+                    requestUtils.notifyServer({
+                        url: "http://localhost:2705/",
+                        data: slackUserInfo
+                    });
                 });
             });
 
@@ -53,7 +59,11 @@ module.exports = function(params) {
                 githubUser: githubUserName
             };
 
-            userUtils.userInfo(slackUserInfo);
+            //userUtils.userInfo(slackUserInfo);
+                    requestUtils.notifyServer({
+                        url: "http://localhost:2705/",
+                        data: slackUserInfo
+                    });
         }
     });
 };
